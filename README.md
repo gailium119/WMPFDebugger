@@ -142,6 +142,28 @@ npx tsx src/index.ts
 
 **Step 4.** Open your chromium-based browsers, navigate to `devtools://devtools/bundled/inspector.html?ws=127.0.0.1:62000` and profit. You can change the CDP port `CDP_PORT` (62000 in this example) in `src/index.ts` to any port you like.
 
+## Troubleshooting
+
+### frida tries to build from source
+
+`frida` installs a prebuilt native binding. On networks where TLS is intercepted, Node may reject the download certificate and frida falls back to a source build, which requires a full C++ toolchain. The repository's `.npmrc` enables Node's system certificate store (`--use-system-ca`) for npm lifecycle scripts. If you use Yarn, pass the same option to its lifecycle scripts:
+
+```bash
+NODE_OPTIONS=--use-system-ca yarn
+```
+
+PowerShell:
+
+```powershell
+$env:NODE_OPTIONS="--use-system-ca"; yarn
+```
+
+If the binding is still missing, download and extract it without compiling:
+
+```bash
+npm run setup:frida
+```
+
 ## Screenshots
 
 ![Console in DevTools](screenshots/console.png)

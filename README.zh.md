@@ -136,6 +136,28 @@ npx tsx src/index.ts
 
 **第 4 步** 打开浏览器，访问 `devtools://devtools/bundled/inspector.html?ws=127.0.0.1:62000` 即可。你也可以将 CDP 端口（在例子中为 62000）修改到任意其他端口。相关代码定义在 `src/index.ts` 中
 
+## 故障排查
+
+### frida 尝试从源码编译
+
+`frida` 默认会下载预编译的原生二进制。在网络 TLS 被代理拦截的环境中，Node 可能无法验证下载证书，导致 frida 回退到源码编译，而源码编译需要完整的 C++ 工具链。仓库中的 `.npmrc` 已为 npm 生命周期脚本启用系统证书库（`--use-system-ca`）。如果你使用 yarn，请同样传入该选项：
+
+```bash
+NODE_OPTIONS=--use-system-ca yarn
+```
+
+PowerShell：
+
+```powershell
+$env:NODE_OPTIONS="--use-system-ca"; yarn
+```
+
+如果仍然缺少二进制，可直接下载并解压预编译版本，无需编译：
+
+```bash
+npm run setup:frida
+```
+
 ## 截图
 
 ![Console in DevTools](screenshots/console.png)
